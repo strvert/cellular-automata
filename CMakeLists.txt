@@ -2,13 +2,18 @@ cmake_minimum_required(VERSION 3.12)
 
 project(lifegame)
 
+find_package(SFML 2 REQUIRED graphics window system)
+
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(${CMAKE_PROJECT_NAME}
     src/main.cpp
-    src/cell.cpp
-    src/world.cpp
+    src/cell_base.cpp
+    src/lifegame_cell.cpp
+    src/field.cpp
+    src/field_renderer.cpp
     )
 
 target_include_directories(${CMAKE_PROJECT_NAME}
@@ -16,10 +21,10 @@ target_include_directories(${CMAKE_PROJECT_NAME}
     )
 
 target_compile_options(${CMAKE_PROJECT_NAME}
-    PRIVATE -Ofast -march=native -Wall
+    PRIVATE -Ofast -Wall
     )
 
-target_link_libraries(${CMAKE_PROJECT_NAME})
+target_link_libraries(${CMAKE_PROJECT_NAME} sfml-graphics sfml-system sfml-window fmt)
 
 set_property(TARGET ${CMAKE_PROJECT_NAME}
     PROPERTY CXX_STANDARD 20
