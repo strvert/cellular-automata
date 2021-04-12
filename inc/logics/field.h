@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 
-#include "chunk.h"
-#include "lifegame_cell.h"
+#include "logics/chunk.h"
+#include "logics/lifegame_cell.h"
 
 class field : public cell_owner
 {

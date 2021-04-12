@@ -5,8 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "cell_owner.h"
-#include "lifegame_cell.h"
+#include "logics/cell_owner.h"
+#include "logics/lifegame_cell.h"
 
 class cell_base;
 

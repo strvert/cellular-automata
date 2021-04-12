@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <fmt/core.h>
 
-#include "cellular_automata_component.h"
+#include "components/cellular_automata_component.h"
 
 constexpr const uint32_t WINDOW_WIDTH = 1920;
 constexpr const uint32_t WINDOW_HEIGHT = 1080;

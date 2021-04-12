@@ -10,10 +10,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(${CMAKE_PROJECT_NAME}
     src/main.cpp
-    src/cell_base.cpp
-    src/lifegame_cell.cpp
-    src/field.cpp
-    src/field_renderer.cpp
+    src/logics/cell_base.cpp
+    src/logics/lifegame_cell.cpp
+    src/logics/field.cpp
+    src/renderers/field_renderer.cpp
     )
 
 target_include_directories(${CMAKE_PROJECT_NAME}

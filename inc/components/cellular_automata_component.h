@@ -1,12 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "field.h"
-#include "field_renderer.h"
+#include "components/component_base.h"
+#include "logics/field.h"
+#include "renderers/field_renderer.h"
 
 class cellular_automata_component
-  : public sf::Drawable
-  , public sf::Transformable
+  : public component_base
+  , public sf::Drawable
 {
 private:
     sf::RenderTexture field_texture;

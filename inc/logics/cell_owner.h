@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "cell_base.h"
+#include "logics/cell_base.h"
 
 class cell_owner
 {
