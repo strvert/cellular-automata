@@ -1,19 +1,17 @@
 #include "renderers/field_renderer.h"
 
-sf::Vector2u field_renderer::get_field_pixel_size() const
+sf::Vector2u FieldRenderer::getFieldPixelSize() const
 {
-    const auto& w = target_field.get_x_cell_count();
-    const auto& h = target_field.get_y_cell_count();
-    return sf::Vector2u(cell_size * w, cell_size * h);
+    const auto& cnt = target_field.getCellCount();
+    return sf::Vector2u(cell_size * cnt.x, cell_size * cnt.y);
 }
 
-void field_renderer::draw_grid() const
+void FieldRenderer::drawGrid() const
 {
-    const auto& field_w = target_field.get_x_cell_count();
-    const auto& field_h = target_field.get_y_cell_count();
+    const auto& field_cnt = target_field.getCellCount();
     auto size = texture.getSize();
 
-    for (auto w = 1; w < field_w; w++)
+    for (auto w = 1; w < field_cnt.x; w++)
     {
         auto v_line = [&] {
             if (w % 10 == 0)
@@ -31,7 +29,7 @@ void field_renderer::draw_grid() const
         v_line.setPosition(w * cell_size, 0);
         texture.draw(v_line);
     }
-    for (auto h = 1; h < field_h; h++)
+    for (auto h = 1; h < field_cnt.y; h++)
     {
         auto h_line = [&] {
             if (h % 10 == 0)
@@ -51,7 +49,7 @@ void field_renderer::draw_grid() const
     }
 }
 
-void field_renderer::draw_frame() const
+void FieldRenderer::drawFrame() const
 {
     const auto s = texture.getSize();
 
@@ -74,13 +72,13 @@ void field_renderer::draw_frame() const
     texture.draw(bottom);
 }
 
-void field_renderer::draw_cells() const
+void FieldRenderer::drawCells() const
 {
 }
 
-void field_renderer::render() const
+void FieldRenderer::render() const
 {
-    if (grid_visibility) { draw_grid(); }
-    draw_frame();
+    if (grid_visibility) { drawGrid(); }
+    drawFrame();
     texture.display();
 }

@@ -16,7 +16,7 @@ int main()
     bool mouse_left_clicked = false;
 
     sf::Sprite cac1_sprite;
-    cellular_automata_component cac1(cac1_sprite, sf::Vector2u(10, 10), sf::Vector2u(60, 60), sf::Vector2u(100, 100));
+    CellularAutomataComponent cac1(cac1_sprite, sf::Vector2u(10, 10), sf::Vector2u(60, 60), sf::Vector2u(100, 100));
 
     while (window.isOpen())
     {
@@ -59,7 +59,7 @@ int main()
 
         cac1.render();
 
-        window.draw(cac1_sprite);
+        window.draw(cac1);
 
         window.display();
     }

@@ -2,27 +2,27 @@
 
 #include "logics/cell_base.h"
 
-class cell_owner;
+class CellOwner;
 
-class lifegame_cell : public cell_base
+class LifegameCell : public CellBase
 {
 private:
     uint8_t num_of_variations;
-    cell_state state;
+    CellState state;
 
 public:
-    virtual ~lifegame_cell() {}
+    virtual ~LifegameCell() {}
 
-    lifegame_cell(const cell_owner& own, const uint64_t id) : cell_base(own, id) {
-        set_state(0);
+    LifegameCell(const CellOwner& own, const uint64_t id) : CellBase(own, id) {
+        setState(0);
     }
 
-    virtual uint8_t get_num_of_variations() const override
+    virtual uint8_t getNumOfVariations() const override
     {
         return num_of_variations;
     }
 
-    virtual void set_state(const cell_state st) override { state = st; }
-    virtual cell_state get_state() const override { return state; }
+    virtual void setState(const CellState st) override { state = st; }
+    virtual CellState getState() const override { return state; }
     virtual void update() override {}
 };

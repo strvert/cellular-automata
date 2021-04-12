@@ -8,22 +8,22 @@
 #include "logics/cell_owner.h"
 #include "logics/lifegame_cell.h"
 
-class cell_base;
+class CellBase;
 
-class chunk : public cell_owner
+class Chunk : public CellOwner
 {
 private:
-    const field& owner_field;
+    const Field& owner_field;
     const uint64_t chunk_id;
 
     const sf::Vector2u chunk_size;
 
-    std::vector<std::unique_ptr<cell_base>> cells;
+    std::vector<std::unique_ptr<CellBase>> cells;
 
 public:
-    ~chunk() {}
+    ~Chunk() {}
 
-    chunk(const sf::Vector2u chunk_size, const uint64_t id, const field& pf)
+    Chunk(const sf::Vector2u chunk_size, const uint64_t id, const Field& pf)
       : owner_field(pf)
       , chunk_id(id)
       , chunk_size(chunk_size)
@@ -32,25 +32,25 @@ public:
         cells.reserve(cell_count);
         for (auto idx = 0; idx < cell_count; idx++)
         {
-            cells.push_back(std::make_unique<lifegame_cell>(*this, idx));
-            cells[idx]->set_state(idx % 2);
+            cells.push_back(std::make_unique<LifegameCell>(*this, idx));
+            cells[idx]->setState(idx % 2);
         }
     }
 
-    virtual const cell_base& get_neighb_cell(const uint64_t idx,
-                                             neighb_pos pos) const override
+    virtual const CellBase& getNeighbCell(const uint64_t idx,
+                                             NeighbPos pos) const override
     {
         switch (pos)
         {
-            case neighb_pos::C: return *(cells[idx]);
-            case neighb_pos::N:
-            case neighb_pos::NE: break;
-            case neighb_pos::E: return *(cells[idx + 1]);
-            case neighb_pos::SE: break;
-            case neighb_pos::S: break;
-            case neighb_pos::SW: break;
-            case neighb_pos::W: return *(cells[idx + 1]);
-            case neighb_pos::NW: break;
+            case NeighbPos::C: return *(cells[idx]);
+            case NeighbPos::N:
+            case NeighbPos::NE: break;
+            case NeighbPos::E: return *(cells[idx + 1]);
+            case NeighbPos::SE: break;
+            case NeighbPos::S: break;
+            case NeighbPos::SW: break;
+            case NeighbPos::W: return *(cells[idx + 1]);
+            case NeighbPos::NW: break;
         };
     }
 

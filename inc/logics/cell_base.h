@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum class neighb_pos {
+enum class NeighbPos {
     C = 0,
     N,
     NE,
@@ -14,24 +14,24 @@ enum class neighb_pos {
     NW,
 };
 
-class field;
-class cell_owner;
+class Field;
+class CellOwner;
 
-class cell_base
+class CellBase
 {
 private:
-    const cell_owner& owner;
+    const CellOwner& owner;
     const uint64_t cell_id;
 
 public:
-    using cell_state = uint8_t;
+    using CellState = uint8_t;
 
-    cell_base(const cell_owner& own, const uint64_t id) : owner(own), cell_id(id) {}
-    virtual ~cell_base() {};
+    CellBase(const CellOwner& own, const uint64_t id) : owner(own), cell_id(id) {}
+    virtual ~CellBase() {};
 
-    virtual uint8_t get_num_of_variations() const = 0;
-    virtual cell_state get_state() const = 0;
-    virtual void set_state(cell_state) = 0;
+    virtual uint8_t getNumOfVariations() const = 0;
+    virtual CellState getState() const = 0;
+    virtual void setState(CellState) = 0;
 
     virtual void update() = 0;
 };
