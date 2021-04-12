@@ -5,6 +5,6 @@
 
 class ComponentInterface : public sf::Drawable
 {
-    virtual sf::IntRect getGlobalBounds() const = 0;
-    virtual sf::IntRect getLocalBounds() const = 0;
+    virtual sf::FloatRect getGlobalBounds() const = 0;
+    virtual sf::FloatRect getLocalBounds() const = 0;
 };

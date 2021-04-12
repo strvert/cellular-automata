@@ -1,9 +1,9 @@
 #include "renderers/field_renderer.h"
 
-sf::Vector2u FieldRenderer::getFieldPixelSize() const
+sf::Vector2f FieldRenderer::getFieldPixelSize() const
 {
     const auto& cnt = target_field.getCellCount();
-    return sf::Vector2u(cell_size * cnt.x, cell_size * cnt.y);
+    return sf::Vector2f(cell_size * cnt.x, cell_size * cnt.y);
 }
 
 void FieldRenderer::drawGrid() const

@@ -16,14 +16,14 @@ private:
     const Field& owner_field;
     const uint64_t chunk_id;
 
-    const sf::Vector2u chunk_size;
+    const sf::Vector2f chunk_size;
 
     std::vector<std::unique_ptr<CellBase>> cells;
 
 public:
     ~Chunk() {}
 
-    Chunk(const sf::Vector2u chunk_size, const uint64_t id, const Field& pf)
+    Chunk(const sf::Vector2f chunk_size, const uint64_t id, const Field& pf)
       : owner_field(pf)
       , chunk_id(id)
       , chunk_size(chunk_size)

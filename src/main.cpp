@@ -16,7 +16,7 @@ int main()
     bool mouse_left_clicked = false;
 
     sf::Sprite cac1_sprite;
-    CellularAutomataComponent cac1(cac1_sprite, sf::Vector2u(10, 10), sf::Vector2u(60, 60), sf::Vector2u(100, 100));
+    CellularAutomataComponent cac1(cac1_sprite, sf::Vector2f(10, 10), sf::Vector2f(60, 60), sf::Vector2f(100, 100));
 
     while (window.isOpen())
     {
@@ -60,6 +60,14 @@ int main()
         cac1.render();
 
         window.draw(cac1);
+        {
+            auto rect = cac1.getLocalBounds();
+            fmt::print("{}, {}, {}, {}\n", rect.left, rect.top, rect.width, rect.height);
+        }
+        {
+            auto rect = cac1.getGlobalBounds();
+            fmt::print("{}, {}, {}, {}\n", rect.left, rect.top, rect.width, rect.height);
+        }
 
         window.display();
     }

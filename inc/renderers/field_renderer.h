@@ -16,18 +16,18 @@ private:
     sf::Color grid_color;
     bool grid_visibility;
 
-    uint16_t thick_line_pt;
-    uint16_t thin_line_pt;
+    float thick_line_pt;
+    float thin_line_pt;
 
     const Field& target_field;
     sf::RenderTexture& texture;
 
-    sf::Vector2u frame_size;
+    sf::Vector2f frame_size;
 
 public:
     FieldRenderer(const Field& f,
                    sf::RenderTexture& tex,
-                   const sf::Vector2u frame_size)
+                   const sf::Vector2f frame_size)
       : target_field(f)
       , texture(tex)
       , frame_size(frame_size)
@@ -45,7 +45,7 @@ public:
         texture.setSmooth(true);
     }
 
-    sf::Vector2u getFieldPixelSize() const;
+    sf::Vector2f getFieldPixelSize() const;
 
     void setCellColor(const sf::Color col) { cell_color = col; }
     void setBgColor(const sf::Color col) { bg_color = col; }

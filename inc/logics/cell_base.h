@@ -26,7 +26,10 @@ private:
 public:
     using CellState = uint8_t;
 
-    CellBase(const CellOwner& own, const uint64_t id) : owner(own), cell_id(id) {}
+    CellBase(const CellOwner& own, const uint64_t id)
+      : owner(own)
+      , cell_id(id)
+    {}
     virtual ~CellBase() {};
 
     virtual uint8_t getNumOfVariations() const = 0;
