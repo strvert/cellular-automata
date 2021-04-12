@@ -22,10 +22,15 @@ private:
     const field& target_field;
     sf::RenderTexture& texture;
 
+    sf::Vector2u frame_size;
+
 public:
-    field_renderer(const field& f, sf::RenderTexture& tex)
+    field_renderer(const field& f,
+                   sf::RenderTexture& tex,
+                   const sf::Vector2u frame_size)
       : target_field(f)
       , texture(tex)
+      , frame_size(frame_size)
     {
         set_cell_color(sf::Color(0, 255, 0, 255));
         set_bg_color(sf::Color(10, 10, 10, 255));

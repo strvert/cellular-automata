@@ -2,8 +2,7 @@
 #include <cstdint>
 #include <fmt/core.h>
 
-#include "field.h"
-#include "field_renderer.h"
+#include "cellular_automata_component.h"
 
 constexpr const uint32_t WINDOW_WIDTH = 1920;
 constexpr const uint32_t WINDOW_HEIGHT = 1080;
@@ -16,16 +15,8 @@ int main()
 
     bool mouse_left_clicked = false;
 
-    sf::RenderTexture field_texture;
-    sf::Sprite field_sprite;
-
-    field fie(70, 90);
-    field_renderer fr(fie, field_texture);
-
-    fr.set_cell_size(12);
-    fr.set_grid_color(sf::Color(255, 255, 255));
-    field_sprite.setTexture(field_texture.getTexture());
-    field_sprite.setPosition(10, 10);
+    sf::Sprite cac1_sprite;
+    cellular_automata_component cac1(cac1_sprite, sf::Vector2u(10, 10), sf::Vector2u(60, 60), sf::Vector2u(100, 100));
 
     while (window.isOpen())
     {
@@ -57,18 +48,19 @@ int main()
             {
                 if (mouse_left_clicked)
                 {
-                    auto x = event.mouseMove.x;
-                    auto y = event.mouseMove.y;
-                    field_sprite.setPosition(x, y);
+                    // auto x = event.mouseMove.x;
+                    // auto y = event.mouseMove.y;
+                    // field_sprite.setPosition(x, y);
                 }
             }
         }
 
         window.clear(sf::Color::Black);
 
-        fr.render();
+        cac1.render();
 
-        window.draw(field_sprite);
+        window.draw(cac1_sprite);
+
         window.display();
     }
 }
