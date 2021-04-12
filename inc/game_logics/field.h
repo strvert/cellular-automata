@@ -1,12 +1,12 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <cstdint>
 #include <memory>
 #include <vector>
 
-#include "logics/chunk.h"
-#include "logics/lifegame_cell.h"
+#include "game_logics/chunk.h"
+#include "game_logics/lifegame_cell.h"
 
 class Field : public CellOwner
 {

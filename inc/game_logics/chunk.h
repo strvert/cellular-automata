@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 
-#include "logics/cell_owner.h"
-#include "logics/lifegame_cell.h"
+#include "game_logics/cell_owner.h"
+#include "game_logics/lifegame_cell.h"
 
 class CellBase;
 

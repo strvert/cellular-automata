@@ -3,6 +3,9 @@
 #include <fmt/core.h>
 
 #include "components/cellular_automata_component.h"
+#include "components/empty_component.h"
+
+#include "system/component_manager.h"
 
 constexpr const uint32_t WINDOW_WIDTH = 1920;
 constexpr const uint32_t WINDOW_HEIGHT = 1080;
@@ -15,14 +18,47 @@ int main()
 
     bool mouse_left_clicked = false;
 
-    sf::Sprite cac1_sprite;
-    CellularAutomataComponent cac1(cac1_sprite, sf::Vector2f(10, 10), sf::Vector2f(60, 60), sf::Vector2f(100, 100));
+    ComponentManager manager;
+
+    auto id_1 = manager.addComponent([]() {
+        auto e = std::make_unique<CellularAutomataComponent>(
+          "game_c",
+          sf::Vector2f(10, 10),
+          sf::Vector2f(60, 60),
+          sf::Vector2f(100, 100));
+        e->setZOrder(-1);
+        return e;
+    }());
+    auto id_2 = manager.addComponent([]() {
+        auto e = std::make_unique<CellularAutomataComponent>(
+          "game_c",
+          sf::Vector2f(500, 15),
+          sf::Vector2f(60, 60),
+          sf::Vector2f(100, 100));
+        e->renderer.setGridColor(sf::Color::Cyan);
+        e->setZOrder(1);
+        return e;
+    }());
 
     while (window.isOpen())
     {
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed) { window.close(); }
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+                break;
+            }
+
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::Escape)
+                {
+                    window.close();
+                    break;
+                }
+            }
+            manager.recvEvent(event);
 
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -57,17 +93,8 @@ int main()
 
         window.clear(sf::Color::Black);
 
-        cac1.render();
-
-        window.draw(cac1);
-        {
-            auto rect = cac1.getLocalBounds();
-            fmt::print("{}, {}, {}, {}\n", rect.left, rect.top, rect.width, rect.height);
-        }
-        {
-            auto rect = cac1.getGlobalBounds();
-            fmt::print("{}, {}, {}, {}\n", rect.left, rect.top, rect.width, rect.height);
-        }
+        manager.update();
+        window.draw(manager.components);
 
         window.display();
     }
