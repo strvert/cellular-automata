@@ -108,25 +108,40 @@ void FieldRenderer::drawFrame() const
     texture.draw(top);
 }
 
-void FieldRenderer::drawCells() const
+void FieldRenderer::drawCells(
+  const std::vector<Field::ChunkCoord>& looking) const
 {
-    const auto& field_cnt = target_field.getCellCount();
+    const auto& chunk_size = target_field.getChunkSize();
+    const auto chunk_px_x = cell_size * chunk_size.x;
+    const auto chunk_px_y = cell_size * chunk_size.y;
     auto cell_shape = sf::RectangleShape(sf::Vector2f(cell_size, cell_size));
+    const auto& start = looking[0];
 
-    for (auto y = 0; y < field_cnt.y; y++)
+    for (auto&& c : looking)
     {
-        for (auto x = 0; x < field_cnt.x; x++)
+        for (auto y = 0; y < chunk_size.y; y++)
         {
-            auto& state = target_field.getCell(Field::ChunkCoord(0, 0),
-                                               CellOwner::CoordVector(x, y));
-
-            // FIXME: 局所的なルールにしか対応していない
-            if (state.getState() == 1)
+            for (auto x = 0; x < chunk_size.x; x++)
             {
-                cell_shape.setFillColor(cell_color);
-                cell_shape.setPosition(x * cell_size - looking_pos.x,
-                                       y * cell_size - looking_pos.y);
-                texture.draw(cell_shape);
+                const CellBase* cell;
+                if (cell =
+                      target_field.getCell(c, CellOwner::CoordVector(x, y));
+                    !cell)
+                {
+                    continue;
+                }
+
+                // FIXME: 局所的なルールにしか対応していない
+                if (cell->getState() == 1)
+                {
+                    cell_shape.setFillColor(cell_color);
+                    cell_shape.setPosition(
+                      (c.x - start.x) * chunk_px_x + x * cell_size -
+                        std::fmod(looking_pos.x, chunk_px_x),
+                      (c.y - start.y) * chunk_px_y + y * cell_size -
+                        std::fmod(looking_pos.y, chunk_px_y));
+                    texture.draw(cell_shape);
+                }
             }
         }
     }
@@ -139,7 +154,11 @@ void FieldRenderer::render() const
     drawFrame();
 
     auto&& chunks = calcLookingChunks();
+    // for (auto&& c: chunks) {
+    //     fmt::print("{}, {}\n", c.x, c.y);
+    // }
+    // fmt::print("\n");
 
-    drawCells();
+    drawCells(chunks);
     texture.display();
 }

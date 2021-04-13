@@ -63,6 +63,6 @@ public:
     void drawBackground() const;
     void drawGrid() const;
     void drawFrame() const;
-    void drawCells() const;
+    void drawCells(const std::vector<Field::ChunkCoord>& looking) const;
     void render() const;
 };

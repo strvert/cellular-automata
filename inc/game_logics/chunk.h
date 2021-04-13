@@ -22,7 +22,7 @@ private:
 public:
     ~Chunk() {}
 
-    Chunk(const sf::Vector2u chunk_size, const int64_t id, const Field& pf)
+    Chunk(const sf::Vector2u chunk_size, const Field& pf)
       : owner_field(pf)
       , chunk_size(chunk_size)
     {
