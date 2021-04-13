@@ -36,18 +36,26 @@ void FieldRenderer::drawGrid() const
 {
     auto offset = sf::Vector2f(std::fmod(looking_pos.x, cell_size),
                                std::fmod(looking_pos.y, cell_size));
-    auto curr_thick_line = sf::Vector2u(
-      std::abs(std::fmod(looking_pos.x, cell_size * thick_line_interval) /
-               cell_size),
-      std::abs(std::fmod(looking_pos.y, cell_size * thick_line_interval) /
-               cell_size));
-
-    auto in_plus = sf::Vector2<bool>(looking_pos.x >= 0, looking_pos.y >= 0);
+    auto curr_thick_line = sf::Vector2f(
+      (std::fmod(looking_pos.x, cell_size * thick_line_interval) / cell_size),
+      (std::fmod(looking_pos.y, cell_size * thick_line_interval) / cell_size));
+    auto calcThickLinePos = [&](float lp, float p) {
+        if (lp < 0) { return static_cast<int>(std::abs(std::ceil(p))); }
+        else if (lp >= 0 && lp < cell_size)
+        {
+            return 0;
+        }
+        else
+        {
+            return static_cast<int>(thick_line_interval - std::floor(p));
+        }
+    };
 
     for (auto w = 0; w * cell_size <= frame_size.x + cell_size; w++)
     {
         auto [v_line, line_pt] = [&] {
-            if (w % thick_line_interval == in_plus.x * (thick_line_interval-1) - curr_thick_line.x)
+            if (w % thick_line_interval ==
+                calcThickLinePos(looking_pos.x, curr_thick_line.x))
             {
                 return std::make_pair(
                   sf::RectangleShape(sf::Vector2f(thick_line_pt, frame_size.y)),
@@ -67,7 +75,8 @@ void FieldRenderer::drawGrid() const
     for (auto h = 0; h * cell_size <= frame_size.y + cell_size; h++)
     {
         auto [h_line, line_pt] = [&] {
-            if (h % thick_line_interval == in_plus.y * (thick_line_interval-1) - curr_thick_line.y)
+            if (h % thick_line_interval ==
+                calcThickLinePos(looking_pos.y, curr_thick_line.y))
             {
                 return std::make_pair(
                   sf::RectangleShape(sf::Vector2f(frame_size.x, thick_line_pt)),

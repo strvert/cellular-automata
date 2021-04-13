@@ -55,13 +55,6 @@ int main()
 
         manager.update();
 
-        auto& v = manager.getComponentById(id_1);
-        if (checkComponentConvertibility<CellularAutomataComponent>(v)) {
-            auto&& c = componentCastedRef<CellularAutomataComponent>(v);
-            c.renderer.setLookingPosition(sf::Vector2f(pos, pos));
-            pos -= 1;
-        }
-
         window.draw(manager.components);
 
         window.display();
