@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <map>
+#include <optional>
 #include <memory>
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -24,17 +25,11 @@ private:
     ComponentMap components;
 
 public:
-    void insert(ComponentMap::value_type&& e)
-    {
-        components.insert(std::move(e));
-    }
+    void insert(ComponentMap::value_type&& e);
     ComponentMap::iterator begin() { return components.begin(); }
     ComponentMap::iterator end() { return components.end(); }
 
-    ComponentMap::mapped_type& operator[](const ComponentMap::key_type& x)
-    {
-        return components[x];
-    }
+    ComponentMap::mapped_type& operator[](const ComponentMap::key_type& x);
 
     /* Drawable methods */
     virtual void draw(sf::RenderTarget& target,
@@ -48,6 +43,7 @@ class ComponentManager
 {
 public:
     ComponentContainer components;
+    bool mouse_left_clicked = false;
 
 private:
     uint64_t head_id = 0;
@@ -58,41 +54,46 @@ private:
 public:
     ComponentManager() {}
 
-    uint64_t addComponent(ComponentPtr&& component)
-    {
-        auto id = head_id++;
-        components.insert(std::make_pair(id, std::move(component)));
-        return id;
-    }
+    uint64_t addComponent(ComponentPtr&& component);
 
     const std::unique_ptr<ComponentInterface>& getComponentByName(
-      const std::string& name)
+      const std::string& name);
+
+    const std::unique_ptr<ComponentInterface>& getComponentById(
+      const uint64_t id);
+
+    void eventProc(const sf::Event& event)
     {
-        auto k = std::find_if(
-          components.begin(), components.end(), [&](const auto& e) {
-              return e.second->getName() == name;
-          });
-        if (k->second) { return k->second; }
-        else
+        if (event.type == sf::Event::MouseButtonPressed)
         {
-            return null_component;
+            if (event.mouseButton.button == sf::Mouse::Left)
+            {
+                fmt::print("mouse button pressed [x: {}, y: {}]\n",
+                           event.mouseButton.x,
+                           event.mouseButton.y);
+                mouse_left_clicked = true;
+            }
+        }
+        if (event.type == sf::Event::MouseButtonReleased)
+        {
+            if (event.mouseButton.button == sf::Mouse::Left)
+            {
+                fmt::print("mouse button pressed [x: {}, y: {}]\n",
+                           event.mouseButton.x,
+                           event.mouseButton.y);
+                mouse_left_clicked = false;
+            }
+        }
+        if (event.type == sf::Event::MouseMoved)
+        {
+            if (mouse_left_clicked)
+            {
+                // auto x = event.mouseMove.x;
+                // auto y = event.mouseMove.y;
+                // field_sprite.setPosition(x, y);
+            }
         }
     }
 
-    const std::unique_ptr<ComponentInterface>& getComponentById(
-      const uint64_t id)
-    {
-        return components[id];
-    }
-
-    void recvEvent(const sf::Event& event) {}
-    void update()
-    {
-        // fmt::print("update\n");
-        // for (auto&& [id, c] : components)
-        // {
-        //     fmt::print("{}({}): {}\n", c->getName(), id, c->getZOrder());
-        // }
-        // fmt::print("\n");
-    }
+    void update();
 };

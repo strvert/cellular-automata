@@ -14,6 +14,7 @@ add_executable(${CMAKE_PROJECT_NAME}
     src/game_logics/lifegame_cell.cpp
     src/game_logics/field.cpp
     src/renderers/field_renderer.cpp
+    src/system/component_manager.cpp
     )
 
 target_include_directories(${CMAKE_PROJECT_NAME}

@@ -16,12 +16,17 @@ public:
     Field ca_field;
     FieldRenderer renderer;
 
+    CellularAutomataComponent()
+      : CellularAutomataComponent("cellular_automata_component_default",
+                                  sf::Vector2f(0, 0),
+                                  sf::Vector2f(100, 100))
+
+    {}
+
     CellularAutomataComponent(const std::string& name,
                               const sf::Vector2f frame_pos,
-                              const sf::Vector2f frame_size,
-                              const sf::Vector2f field_size)
+                              const sf::Vector2f frame_size)
       : AbstractBasicComponent(name)
-      , ca_field(field_size)
       , renderer(ca_field, field_texture, frame_size)
     {
         field_sprite.setTexture(field_texture.getTexture());

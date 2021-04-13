@@ -1,9 +1,11 @@
 #pragma once
 
+#include <concepts>
+#include <memory>
 #include <string>
 
-#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
 class ComponentInterface : public sf::Drawable
 {
@@ -17,3 +19,19 @@ public:
     virtual const std::string& getName() const = 0;
     virtual void setName(const std::string& c) = 0;
 };
+
+template<typename T>
+concept Component = std::derived_from<T, ComponentInterface>;
+
+template<typename To>
+bool checkComponentConvertibility(
+  const std::unique_ptr<ComponentInterface>& ptr)
+{
+    return dynamic_cast<To*>(ptr.get());
+}
+
+template<Component To>
+To& componentCastedRef(const std::unique_ptr<ComponentInterface>& ptr)
+{
+    return *dynamic_cast<To*>(ptr.get());
+}

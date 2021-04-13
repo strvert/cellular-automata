@@ -20,26 +20,16 @@ int main()
 
     ComponentManager manager;
 
-    auto id_1 = manager.addComponent([]() {
+    auto id_1 = manager.addComponent([] {
         auto e = std::make_unique<CellularAutomataComponent>(
-          "game_c",
-          sf::Vector2f(10, 10),
-          sf::Vector2f(60, 60),
-          sf::Vector2f(100, 100));
-        e->setZOrder(-1);
-        return e;
-    }());
-    auto id_2 = manager.addComponent([]() {
-        auto e = std::make_unique<CellularAutomataComponent>(
-          "game_c",
-          sf::Vector2f(500, 15),
-          sf::Vector2f(60, 60),
-          sf::Vector2f(100, 100));
-        e->renderer.setGridColor(sf::Color::Cyan);
-        e->setZOrder(1);
+          "game_c", sf::Vector2f(10, 10), sf::Vector2f(1080, 1080));
+        e->renderer.setCellSize(25);
+        e->renderer.setThickLinePt(5);
+        e->renderer.setCellColor(sf::Color::Red);
         return e;
     }());
 
+    float pos = 0;
     while (window.isOpen())
     {
         while (window.pollEvent(event))
@@ -58,42 +48,20 @@ int main()
                     break;
                 }
             }
-            manager.recvEvent(event);
-
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    fmt::print("mouse button pressed [x: {}, y: {}]\n",
-                               event.mouseButton.x,
-                               event.mouseButton.y);
-                    mouse_left_clicked = true;
-                }
-            }
-            if (event.type == sf::Event::MouseButtonReleased)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    fmt::print("mouse button pressed [x: {}, y: {}]\n",
-                               event.mouseButton.x,
-                               event.mouseButton.y);
-                    mouse_left_clicked = false;
-                }
-            }
-            if (event.type == sf::Event::MouseMoved)
-            {
-                if (mouse_left_clicked)
-                {
-                    // auto x = event.mouseMove.x;
-                    // auto y = event.mouseMove.y;
-                    // field_sprite.setPosition(x, y);
-                }
-            }
+            manager.eventProc(event);
         }
 
         window.clear(sf::Color::Black);
 
         manager.update();
+
+        auto& v = manager.getComponentById(id_1);
+        if (checkComponentConvertibility<CellularAutomataComponent>(v)) {
+            auto&& c = componentCastedRef<CellularAutomataComponent>(v);
+            c.renderer.setLookingPosition(sf::Vector2f(pos, pos));
+            pos -= 1;
+        }
+
         window.draw(manager.components);
 
         window.display();
