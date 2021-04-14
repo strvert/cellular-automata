@@ -1,6 +1,10 @@
 #include <SFML/Graphics.hpp>
-#include <cstdint>
 #include <fmt/core.h>
+
+#include <chrono>
+#include <cstdint>
+#include <optional>
+#include <vector>
 
 #include "components/cellular_automata_component.h"
 #include "components/empty_component.h"
@@ -27,26 +31,39 @@ int main()
                             "lifegame");
     sf::Event event;
 
-    bool mouse_left_clicked = false;
-
     ComponentManager manager;
 
     auto id_1 = manager.addComponent([] {
         auto e = std::make_unique<CellularAutomataComponent>(
-          "game_c", sf::Vector2f(10, 10), sf::Vector2f(1070, 1070));
-        e->renderer.setCellSize(9);
-        e->renderer.setThickLinePt(5);
-        e->renderer.setCellColor(sf::Color::Red);
+          "game_c", sf::Vector2f(10, 10), sf::Vector2f(1000, 1000));
+        e->renderer.setCellSize(10);
+        e->renderer.setThickLinePt(2);
+        e->renderer.setCellColor(sf::Color::Blue);
         return e;
     }());
 
-    auto& cac = componentCastWithExit<CellularAutomataComponent>(
-      manager.getComponentById(id_1));
-    cac.renderer.setCellColor(sf::Color::Blue);
+    // auto id_2 = manager.addComponent([] {
+    //     auto e = std::make_unique<CellularAutomataComponent>(
+    //       "game_c", sf::Vector2f(600, 10), sf::Vector2f(500, 500));
+    //     e->renderer.setCellSize(10);
+    //     e->renderer.setThickLinePt(2);
+    //     e->renderer.setCellColor(sf::Color::Red);
+    //     return e;
+    // }());
 
+    auto& cac_1 = componentCastWithExit<CellularAutomataComponent>(
+      manager.getComponentById(id_1));
+
+    // auto& cac_2 = componentCastWithExit<CellularAutomataComponent>(
+    //   manager.getComponentById(id_2));
+
+    auto start = std::chrono::system_clock::now();
+    auto end = std::chrono::system_clock::now();
     float pos = 0;
     while (window.isOpen())
     {
+        double delta_time = std::chrono::duration<double>(end - start).count();
+        start = std::chrono::system_clock::now();
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -70,11 +87,12 @@ int main()
 
         manager.update();
 
-        cac.renderer.setLookingPosition(sf::Vector2f(pos, pos));
-        pos += 3;
+        // pos -= 100 * delta_time;
+        // cac_1.renderer.setLookingPosition(sf::Vector2f(200+pos, 200+pos));
 
         window.draw(manager.components);
 
         window.display();
+        end = std::chrono::system_clock::now();
     }
 }

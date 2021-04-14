@@ -13,7 +13,7 @@ ComponentMap::mapped_type& ComponentContainer::operator[](
 
 uint64_t ComponentManager::addComponent(ComponentPtr&& component)
 {
-    auto id = head_id++;
+    const auto id = head_id++;
     components.insert(std::make_pair(id, std::move(component)));
     return id;
 }
@@ -21,7 +21,7 @@ uint64_t ComponentManager::addComponent(ComponentPtr&& component)
 const std::unique_ptr<ComponentInterface>& ComponentManager::getComponentByName(
   const std::string& name)
 {
-    auto k =
+    const auto k =
       std::find_if(components.begin(), components.end(), [&](const auto& e) {
           return e.second->getName() == name;
       });
@@ -46,4 +46,26 @@ void ComponentManager::update()
     //     fmt::print("{}({}): {}\n", c->getName(), id, c->getZOrder());
     // }
     // fmt::print("\n");
+}
+
+void ComponentManager::setActiveComponent(const uint64_t id)
+{
+    current_active_component = id;
+}
+
+uint64_t ComponentManager::getActiveComponent(const uint64_t id) const
+{
+    return current_active_component;
+}
+
+void ComponentManager::eventProc(const sf::Event& event)
+{
+    if (event.type == sf::Event::MouseButtonReleased)
+    {
+        if (event.mouseButton.button == sf::Mouse::Left)
+        {
+            sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
+        }
+    }
+    for (auto&& [k, c] : components) { c->eventProc(event); }
 }

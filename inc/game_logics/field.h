@@ -31,19 +31,18 @@ private:
                        std::unique_ptr<Chunk>,
                        VectorHash<ChunkCoordValueType>>
       chunks;
-    sf::Vector2u chunk_size = sf::Vector2u(128, 128);
+    sf::Vector2u chunk_size = sf::Vector2u(32, 32);
 
 public:
     Field()
     {
         chunks.insert(std::make_pair(
+          ChunkCoord(-2, -2), std::make_unique<Chunk>(chunk_size, *this)));
+        chunks.insert(std::make_pair(
           ChunkCoord(0, 0), std::make_unique<Chunk>(chunk_size, *this)));
+
         chunks.insert(std::make_pair(
-          ChunkCoord(0, 1), std::make_unique<Chunk>(chunk_size, *this)));
-        chunks.insert(std::make_pair(
-          ChunkCoord(1, 1), std::make_unique<Chunk>(chunk_size, *this)));
-        chunks.insert(std::make_pair(
-          ChunkCoord(2, 1), std::make_unique<Chunk>(chunk_size, *this)));
+          ChunkCoord(2, 2), std::make_unique<Chunk>(chunk_size, *this)));
     }
 
     sf::Vector2i getCellCount() const
@@ -58,7 +57,6 @@ public:
     const CellBase* getCell(const ChunkCoord chunk_coord,
                             const Chunk::CoordVector cell_coord) const
     {
-        // return getNeighbCell(id, NeighbPos::C);
         if (chunks.contains(chunk_coord))
         {
             return &chunks.at(chunk_coord)->getCell(cell_coord);

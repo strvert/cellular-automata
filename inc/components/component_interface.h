@@ -6,6 +6,7 @@
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Window/Event.hpp>
 
 class ComponentInterface : public sf::Drawable
 {
@@ -18,12 +19,14 @@ public:
 
     virtual const std::string& getName() const = 0;
     virtual void setName(const std::string& c) = 0;
+
+    virtual void eventProc(const sf::Event& event) = 0;
 };
 
 template<typename T>
 concept Component = std::derived_from<T, ComponentInterface>;
 
-template<typename To>
+template<Component To>
 bool checkComponentConvertibility(
   const std::unique_ptr<ComponentInterface>& ptr)
 {

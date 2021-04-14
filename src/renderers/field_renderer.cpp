@@ -1,4 +1,5 @@
 #include "renderers/field_renderer.h"
+#include "system/utils.h"
 #include <cmath>
 
 std::vector<Field::ChunkCoord> FieldRenderer::calcLookingChunks() const
@@ -27,7 +28,7 @@ std::vector<Field::ChunkCoord> FieldRenderer::calcLookingChunks() const
 void FieldRenderer::drawBackground() const
 {
     auto background =
-      sf::RectangleShape(sf::Vector2f(frame_size.x, frame_size.y));
+      sf::RectangleShape(utils::convertVector<float>(frame_size));
     background.setFillColor(bg_color);
     texture.draw(background);
 }
@@ -40,14 +41,14 @@ void FieldRenderer::drawGrid() const
       (std::fmod(looking_pos.x, cell_size * thick_line_interval) / cell_size),
       (std::fmod(looking_pos.y, cell_size * thick_line_interval) / cell_size));
     auto calcThickLinePos = [&](float lp, float p) {
-        if (lp < 0) { return static_cast<int>(std::abs(std::ceil(p))); }
-        else if (lp >= 0 && lp < cell_size)
+        if (lp <= 0) { return static_cast<int>(std::abs(std::ceil(p))); }
+        else if (lp > 0)
         {
-            return 0;
+            return static_cast<int>(thick_line_interval - std::floor(p));
         }
         else
         {
-            return static_cast<int>(thick_line_interval - std::floor(p));
+            return 0;
         }
     };
 
@@ -97,13 +98,11 @@ void FieldRenderer::drawGrid() const
 
 void FieldRenderer::drawFrame() const
 {
-    auto left =
-      sf::RectangleShape(sf::Vector2f(thick_line_pt + 2, frame_size.y));
+    sf::RectangleShape left(sf::Vector2f(thick_line_pt + 2, frame_size.y));
     left.setFillColor(grid_color);
     texture.draw(left);
 
-    auto top =
-      sf::RectangleShape(sf::Vector2f(frame_size.x, thick_line_pt + 2));
+    sf::RectangleShape top(sf::Vector2f(frame_size.x, thick_line_pt + 2));
     top.setFillColor(grid_color);
     texture.draw(top);
 }
@@ -137,9 +136,9 @@ void FieldRenderer::drawCells(
                     cell_shape.setFillColor(cell_color);
                     cell_shape.setPosition(
                       (c.x - start.x) * chunk_px_x + x * cell_size -
-                        std::fmod(looking_pos.x, chunk_px_x),
+                        (looking_pos.x < 0 ? 1 : 0) * chunk_px_x - std::fmod(looking_pos.x, chunk_px_x),
                       (c.y - start.y) * chunk_px_y + y * cell_size -
-                        std::fmod(looking_pos.y, chunk_px_y));
+                        (looking_pos.y < 0 ? 1 : 0) * chunk_px_y - std::fmod(looking_pos.y, chunk_px_y));
                     texture.draw(cell_shape);
                 }
             }
@@ -154,9 +153,7 @@ void FieldRenderer::render() const
     drawFrame();
 
     auto&& chunks = calcLookingChunks();
-    // for (auto&& c: chunks) {
-    //     fmt::print("{}, {}\n", c.x, c.y);
-    // }
+    // for (auto&& c : chunks) { fmt::print("{}, {}\n", c.x, c.y); }
     // fmt::print("\n");
 
     drawCells(chunks);

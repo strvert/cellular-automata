@@ -57,6 +57,7 @@ public:
     void setThinLinePt(const uint16_t pt) { thin_line_pt = pt; }
     void setThickLineInterval(const uint16_t interval) { thick_line_interval = interval; }
     void setLookingPosition(const sf::Vector2f pos) { looking_pos = pos; }
+    sf::Vector2f getLookingPosition() const { return looking_pos; }
 
     std::vector<Field::ChunkCoord> calcLookingChunks() const;
 
