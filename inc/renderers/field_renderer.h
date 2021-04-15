@@ -52,6 +52,7 @@ public:
     void setBgColor(const sf::Color col) { bg_color = col; }
     void setGridColor(const sf::Color col) { grid_color = col; }
     void setCellSize(const uint32_t size) { cell_size = size; }
+    uint32_t getCellSize() { return cell_size; }
     void setGridVisible(bool b) { grid_visibility = b; }
     void setThickLinePt(const uint16_t pt) { thick_line_pt = pt; }
     void setThinLinePt(const uint16_t pt) { thin_line_pt = pt; }

@@ -19,53 +19,59 @@ class EventHandler
 using ComponentPtr = std::unique_ptr<ComponentInterface>;
 using ComponentMap = std::map<uint64_t, ComponentPtr>;
 
-class ComponentContainer : public sf::Drawable
+class ComponentDrawableReferencer : public sf::Drawable
 {
 private:
-    ComponentMap components;
+    const ComponentMap& components_ref;
 
 public:
-    void insert(ComponentMap::value_type&& e);
-    ComponentMap::iterator begin() { return components.begin(); }
-    ComponentMap::iterator end() { return components.end(); }
-
-    ComponentMap::mapped_type& operator[](const ComponentMap::key_type& x);
+    ComponentDrawableReferencer(const ComponentMap& cr)
+      : components_ref(cr)
+    {}
 
     /* Drawable methods */
     virtual void draw(sf::RenderTarget& target,
                       sf::RenderStates states) const override
     {
-        for (auto&& [id, c] : components) { target.draw(*c, states); }
+        for (auto&& [id, c] : components_ref) { target.draw(*c, states); }
     }
 };
 
 class ComponentManager
 {
-public:
-    ComponentContainer components;
-
 private:
     uint64_t head_id = 0;
-
     const ComponentPtr null_component =
       std::unique_ptr<EmptyComponent>(nullptr); // for error
 
-    uint64_t current_active_component;
+    uint64_t current_active_component = 0;
+
+    uint64_t left_click_start_component;
 
 public:
-    ComponentManager() {}
+    ComponentMap components;
+    ComponentDrawableReferencer drawable_refs;
+
+
+public:
+    ComponentManager()
+      : drawable_refs(components)
+    {
+        setActiveComponent(0);
+    }
 
     uint64_t addComponent(ComponentPtr&& component);
 
-    const std::unique_ptr<ComponentInterface>& getComponentByName(
-      const std::string& name);
+    ComponentInterface& getComponentByName(const std::string& name) const;
 
-    const std::unique_ptr<ComponentInterface>& getComponentById(
-      const uint64_t id);
-
-    uint64_t getActiveComponent(const uint64_t id) const;
+    ComponentInterface& getComponentById(const uint64_t id) const;
+    std::pair<uint64_t, ComponentInterface&> getComponentByPosition(
+      const sf::Vector2f pos) const;
+    std::pair<uint64_t, ComponentInterface&> getActiveComponent() const;
     void setActiveComponent(const uint64_t id);
+    const ComponentDrawableReferencer& getDrawableObject() const;
 
-    void eventProc(const sf::Event& event);
-    void update();
+    void update(const sf::Event& event);
+
+    void next_step();
 };

@@ -13,9 +13,9 @@ public:
 
 public:
     ~CellOwner() {}
-    virtual const CellBase& getNeighbCell(const CoordVector coord,
+    virtual CellBase& getNeighbCell(const CoordVector coord,
                                           NeighbPos pos) const = 0;
-    virtual const CellBase& getCell(const CoordVector coord) const
+    virtual CellBase& getCell(const CoordVector coord) const
     {
         return getNeighbCell(coord, NeighbPos::C);
     }

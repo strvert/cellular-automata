@@ -36,33 +36,42 @@ int main()
     auto id_1 = manager.addComponent([] {
         auto e = std::make_unique<CellularAutomataComponent>(
           "game_c", sf::Vector2f(10, 10), sf::Vector2f(1000, 1000));
-        e->renderer.setCellSize(10);
+        e->renderer.setCellSize(15);
         e->renderer.setThickLinePt(2);
         e->renderer.setCellColor(sf::Color::Blue);
         return e;
     }());
 
-    // auto id_2 = manager.addComponent([] {
-    //     auto e = std::make_unique<CellularAutomataComponent>(
-    //       "game_c", sf::Vector2f(600, 10), sf::Vector2f(500, 500));
-    //     e->renderer.setCellSize(10);
-    //     e->renderer.setThickLinePt(2);
-    //     e->renderer.setCellColor(sf::Color::Red);
-    //     return e;
-    // }());
+    auto id_2 = manager.addComponent([] {
+        auto e = std::make_unique<CellularAutomataComponent>(
+          "game_c", sf::Vector2f(600, 10), sf::Vector2f(500, 500));
+        e->renderer.setCellSize(5);
+        e->renderer.setThickLinePt(2);
+        e->renderer.setCellColor(sf::Color::Red);
+        return e;
+    }());
 
-    auto& cac_1 = componentCastWithExit<CellularAutomataComponent>(
-      manager.getComponentById(id_1));
+    auto id_3 = manager.addComponent([] {
+        auto e = std::make_unique<CellularAutomataComponent>(
+          "game_c", sf::Vector2f(800, 500), sf::Vector2f(700, 700));
+        e->renderer.setCellSize(30);
+        e->renderer.setThickLinePt(2);
+        e->renderer.setCellColor(sf::Color::Green);
+        return e;
+    }());
+
+    // auto& cac_1 = componentCastWithExit<CellularAutomataComponent>(
+    //   manager.getComponentById(id_1));
 
     // auto& cac_2 = componentCastWithExit<CellularAutomataComponent>(
     //   manager.getComponentById(id_2));
 
     auto start = std::chrono::system_clock::now();
     auto end = std::chrono::system_clock::now();
-    float pos = 0;
     while (window.isOpen())
     {
-        double delta_time = std::chrono::duration<double>(end - start).count();
+        // double delta_time = std::chrono::duration<double>(end -
+        // start).count();
         start = std::chrono::system_clock::now();
         while (window.pollEvent(event))
         {
@@ -80,17 +89,17 @@ int main()
                     break;
                 }
             }
-            manager.eventProc(event);
+            manager.update(event);
         }
 
         window.clear(sf::Color::Black);
 
-        manager.update();
+        manager.next_step();
 
         // pos -= 100 * delta_time;
         // cac_1.renderer.setLookingPosition(sf::Vector2f(200+pos, 200+pos));
 
-        window.draw(manager.components);
+        window.draw(manager.getDrawableObject());
 
         window.display();
         end = std::chrono::system_clock::now();

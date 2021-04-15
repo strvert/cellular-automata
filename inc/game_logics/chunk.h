@@ -35,7 +35,7 @@ public:
         }
     }
 
-    virtual const CellBase& getNeighbCell(const CellOwner::CoordVector coord,
+    virtual CellBase& getNeighbCell(const CellOwner::CoordVector coord,
                                           NeighbPos pos) const override
     {
         auto idx = coord.y * chunk_size.x + coord.x;

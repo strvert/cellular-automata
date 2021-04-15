@@ -1,16 +1,5 @@
 #include "system/component_manager.h"
 
-void ComponentContainer::insert(ComponentMap::value_type&& e)
-{
-    components.insert(std::move(e));
-}
-
-ComponentMap::mapped_type& ComponentContainer::operator[](
-  const ComponentMap::key_type& x)
-{
-    return components[x];
-}
-
 uint64_t ComponentManager::addComponent(ComponentPtr&& component)
 {
     const auto id = head_id++;
@@ -18,34 +7,23 @@ uint64_t ComponentManager::addComponent(ComponentPtr&& component)
     return id;
 }
 
-const std::unique_ptr<ComponentInterface>& ComponentManager::getComponentByName(
-  const std::string& name)
+ComponentInterface& ComponentManager::getComponentByName(
+  const std::string& name) const
 {
     const auto k =
-      std::find_if(components.begin(), components.end(), [&](const auto& e) {
+      std::find_if(components.cbegin(), components.cend(), [&](const auto& e) {
           return e.second->getName() == name;
       });
-    if (k->second) { return k->second; }
+    if (k->second) { return *k->second; }
     else
     {
-        return null_component;
+        return *null_component;
     }
 }
 
-const std::unique_ptr<ComponentInterface>& ComponentManager::getComponentById(
-  const uint64_t id)
+ComponentInterface& ComponentManager::getComponentById(const uint64_t id) const
 {
-    return components[id];
-}
-
-void ComponentManager::update()
-{
-    // fmt::print("update\n");
-    // for (auto&& [id, c] : components)
-    // {
-    //     fmt::print("{}({}): {}\n", c->getName(), id, c->getZOrder());
-    // }
-    // fmt::print("\n");
+    return *components.at(id);
 }
 
 void ComponentManager::setActiveComponent(const uint64_t id)
@@ -53,19 +31,45 @@ void ComponentManager::setActiveComponent(const uint64_t id)
     current_active_component = id;
 }
 
-uint64_t ComponentManager::getActiveComponent(const uint64_t id) const
+std::pair<uint64_t, ComponentInterface&>
+ComponentManager::getComponentByPosition(const sf::Vector2f pos) const
 {
-    return current_active_component;
+    for (auto &&iter = components.rbegin(), e = components.rend(); iter != e;
+         ++iter)
+    {
+        if (iter->second->getGlobalBounds().contains(pos))
+        {
+            return { iter->first, *iter->second };
+        }
+    }
+    return { 0, *null_component };
 }
 
-void ComponentManager::eventProc(const sf::Event& event)
+std::pair<uint64_t, ComponentInterface&> ComponentManager::getActiveComponent()
+  const
 {
-    if (event.type == sf::Event::MouseButtonReleased)
+    return { current_active_component,
+             *components.at(current_active_component) };
+}
+
+const ComponentDrawableReferencer& ComponentManager::getDrawableObject() const
+{
+    return drawable_refs;
+}
+
+void ComponentManager::update(const sf::Event& event)
+{
+    if (event.type == sf::Event::MouseButtonPressed)
     {
         if (event.mouseButton.button == sf::Mouse::Left)
         {
-            sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
+            auto [id, cmp] = getComponentByPosition(
+              sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
+            setActiveComponent(id);
         }
     }
-    for (auto&& [k, c] : components) { c->eventProc(event); }
+    auto [id, cmp] = getActiveComponent();
+    cmp.update(event);
 }
+
+void ComponentManager::next_step() {}

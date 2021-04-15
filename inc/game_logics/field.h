@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 #include <fmt/core.h>
 
 #include <cstdint>
@@ -40,9 +41,10 @@ public:
           ChunkCoord(-2, -2), std::make_unique<Chunk>(chunk_size, *this)));
         chunks.insert(std::make_pair(
           ChunkCoord(0, 0), std::make_unique<Chunk>(chunk_size, *this)));
-
         chunks.insert(std::make_pair(
           ChunkCoord(2, 2), std::make_unique<Chunk>(chunk_size, *this)));
+        chunks.insert(std::make_pair(
+          ChunkCoord(10, 10), std::make_unique<Chunk>(chunk_size, *this)));
     }
 
     sf::Vector2i getCellCount() const
@@ -50,11 +52,11 @@ public:
         return sf::Vector2i(chunk_size.x, chunk_size.y);
     }
 
-    const CellBase* getNeighbCell(const uint64_t chunk_id,
+    CellBase* getNeighbCell(const uint64_t chunk_id,
                                   const uint64_t id,
                                   NeighbPos pos) const
     {}
-    const CellBase* getCell(const ChunkCoord chunk_coord,
+    CellBase* getCell(const ChunkCoord chunk_coord,
                             const Chunk::CoordVector cell_coord) const
     {
         if (chunks.contains(chunk_coord))
@@ -66,5 +68,5 @@ public:
 
     sf::Vector2u getChunkSize() const { return chunk_size; }
 
-    void update() {}
+    void update(const sf::Event& event) {}
 };
