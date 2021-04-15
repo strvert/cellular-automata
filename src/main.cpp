@@ -70,8 +70,8 @@ int main()
     auto end = std::chrono::system_clock::now();
     while (window.isOpen())
     {
-        // double delta_time = std::chrono::duration<double>(end -
-        // start).count();
+        double delta = std::chrono::duration<double>(end -
+        start).count();
         start = std::chrono::system_clock::now();
         while (window.pollEvent(event))
         {
@@ -89,11 +89,12 @@ int main()
                     break;
                 }
             }
-            manager.update(event);
+            manager.eventProc(event);
         }
 
         window.clear(sf::Color::Black);
 
+        manager.update(delta);
         manager.next_step();
 
         // pos -= 100 * delta_time;

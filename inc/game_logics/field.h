@@ -68,5 +68,5 @@ public:
 
     sf::Vector2u getChunkSize() const { return chunk_size; }
 
-    void update(const sf::Event& event) {}
+    void eventProc(const sf::Event& event) {}
 };

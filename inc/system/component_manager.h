@@ -71,7 +71,8 @@ public:
     void setActiveComponent(const uint64_t id);
     const ComponentDrawableReferencer& getDrawableObject() const;
 
-    void update(const sf::Event& event);
+    void eventProc(const sf::Event& event);
+    void update(const double delta);
 
     void next_step();
 };

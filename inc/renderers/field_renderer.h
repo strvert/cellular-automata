@@ -10,7 +10,7 @@ class FieldRenderer
 {
 private:
     sf::Color cell_color;
-    uint32_t cell_size;
+    float cell_size;
 
     sf::Color bg_color;
     sf::Color grid_color;
@@ -26,10 +26,13 @@ private:
     sf::Vector2i frame_size;
     sf::Vector2f looking_pos;
 
+    const uint32_t max_zoom_level = 50;
+    const uint32_t min_zoom_level = 2;
+
 public:
     FieldRenderer(const Field& f,
-                   sf::RenderTexture& tex,
-                   const sf::Vector2f frame_size)
+                  sf::RenderTexture& tex,
+                  const sf::Vector2f frame_size)
       : target_field(f)
       , texture(tex)
       , frame_size(frame_size)
@@ -51,12 +54,21 @@ public:
     void setCellColor(const sf::Color col) { cell_color = col; }
     void setBgColor(const sf::Color col) { bg_color = col; }
     void setGridColor(const sf::Color col) { grid_color = col; }
-    void setCellSize(const uint32_t size) { cell_size = size; }
-    uint32_t getCellSize() { return cell_size; }
+    bool setCellSize(const float size)
+    {
+        cell_size = (size <= max_zoom_level
+                       ? (size >= min_zoom_level ? size : min_zoom_level)
+                       : max_zoom_level);
+        return cell_size == size;
+    }
+    float getCellSize() { return cell_size; }
     void setGridVisible(bool b) { grid_visibility = b; }
     void setThickLinePt(const uint16_t pt) { thick_line_pt = pt; }
     void setThinLinePt(const uint16_t pt) { thin_line_pt = pt; }
-    void setThickLineInterval(const uint16_t interval) { thick_line_interval = interval; }
+    void setThickLineInterval(const uint16_t interval)
+    {
+        thick_line_interval = interval;
+    }
     void setLookingPosition(const sf::Vector2f pos) { looking_pos = pos; }
     sf::Vector2f getLookingPosition() const { return looking_pos; }
 

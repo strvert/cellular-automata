@@ -57,7 +57,7 @@ const ComponentDrawableReferencer& ComponentManager::getDrawableObject() const
     return drawable_refs;
 }
 
-void ComponentManager::update(const sf::Event& event)
+void ComponentManager::eventProc(const sf::Event& event)
 {
     if (event.type == sf::Event::MouseButtonPressed)
     {
@@ -69,7 +69,8 @@ void ComponentManager::update(const sf::Event& event)
         }
     }
     auto [id, cmp] = getActiveComponent();
-    cmp.update(event);
+    cmp.eventProc(event);
 }
 
+void ComponentManager::update(const double delta) {}
 void ComponentManager::next_step() {}

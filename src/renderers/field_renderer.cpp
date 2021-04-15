@@ -153,9 +153,6 @@ void FieldRenderer::render() const
     drawFrame();
 
     auto&& chunks = calcLookingChunks();
-    // for (auto&& c : chunks) { fmt::print("{}, {}\n", c.x, c.y); }
-    // fmt::print("\n");
-
     drawCells(chunks);
     texture.display();
 }

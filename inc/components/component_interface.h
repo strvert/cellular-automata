@@ -20,7 +20,8 @@ public:
     virtual const std::string& getName() const = 0;
     virtual void setName(const std::string& c) = 0;
 
-    virtual void update(const sf::Event& event) = 0;
+    virtual void eventProc(const sf::Event& event) = 0;
+    virtual void update(const double delta) = 0;
 };
 
 template<typename T>
